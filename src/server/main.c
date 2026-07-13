@@ -24,8 +24,22 @@ int main() {
         perror("bind failed");
         exit(1);
     }
+    printf("Bound to port 8432\n");
 
+    //listens for and accepts connections
+    if(listen(server_fd, 5) < 0) {
+        perror("listen failed");
+        exit(1);       
+    }
+    printf("listening on port 8432\n");
 
-    printf("Bound to port 8080\n");
-    return 0;
-}
+    struct sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    int client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_len);
+    if(client_fd < 0) {
+        perror("accept failed");
+        exit(1);
+    }
+
+    printf("client connected.\n");
+}  
