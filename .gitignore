@@ -1,2 +1,7 @@
 *.o
 *.out
+server
+client
+coordinator
+build/
+.vscode/
