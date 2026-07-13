@@ -38,6 +38,17 @@ int main(int argc, char *argv[]) {
     
     printf("Connected to server\n");
 
+    char *message = "Hello from client!";
+    send(sock_fd, message, strlen(message), 0);
+    printf("Sent: %s\n", message);
+
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+    int bytes_received = recv(sock_fd, buffer, sizeof(buffer) - 1, 0);
+    if (bytes_received > 0) {
+        printf("Server replied: %s\n", buffer);
+    }
+
     close(sock_fd);
     return 0;
 }

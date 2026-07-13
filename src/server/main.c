@@ -43,5 +43,15 @@ int main() {
 
     printf("client connected.\n");
     
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+    int bytes_received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+    if (bytes_received > 0) {
+        printf("client said: %s\n", buffer);
+    }
+
+    char *reply = "Hello from server!!!";
+    send(client_fd, reply, strlen(reply), 0);
+    
     return 0;
 }  
