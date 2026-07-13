@@ -1,7 +1,7 @@
 *.o
 *.out
-server
-client
-coordinator
+/server
+/client
+/coordinator
 build/
 .vscode/
