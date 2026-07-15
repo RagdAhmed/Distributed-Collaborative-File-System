@@ -4,6 +4,8 @@
 #include <unistd.h>    
 #include <arpa/inet.h> 
 #include <sys/socket.h>
+#include "../../include/protocol.h"
+#include "../../include/net_utils.h"
 
 int main(int argc, char *argv[]) {
     if(argc != 3) {
@@ -38,17 +40,16 @@ int main(int argc, char *argv[]) {
     
     printf("Connected to server\n");
 
-    char *message = "Hello from client!";
-    send(sock_fd, message, strlen(message), 0);
-    printf("Sent: %s\n", message);
+    MessageHeader header;
+    header.command = CMD_UPLOAD;
+    header.filename_len = 0;
+    header.payload_len = 0;
 
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
-    int bytes_received = recv(sock_fd, buffer, sizeof(buffer) - 1, 0);
-    if (bytes_received > 0) {
-        printf("Server replied: %s\n", buffer);
+    if(send_all(sock_fd, &header, sizeof(header)) < 0){
+        perror("failed to send header");
+        exit(1);
     }
-
+    printf("Header sent: command=%u\n", header.command);
     close(sock_fd);
     return 0;
 }

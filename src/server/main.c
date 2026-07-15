@@ -4,6 +4,8 @@
 #include <unistd.h>    
 #include <arpa/inet.h> 
 #include <sys/socket.h>
+#include "../../include/protocol.h"
+#include "../../include/net_utils.h"
 
 int main() {
     //creating the socket
@@ -43,15 +45,12 @@ int main() {
 
     printf("client connected.\n");
     
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
-    int bytes_received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
-    if (bytes_received > 0) {
-        printf("client said: %s\n", buffer);
+    MessageHeader header;
+    if(recv_all(client_fd, &header, sizeof(header)) < 0) {
+        perror("failed to receive header");
+        exit(1);
     }
-
-    char *reply = "Hello from server!!!";
-    send(client_fd, reply, strlen(reply), 0);
+    printf("Received header: command=%u, filename_len=%u, payload_len=%lu\n", header.command, header.filename_len, header.payload_len);
     
     return 0;
 }  
